@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+            <script src="https://code.highcharts.com/highcharts.js"></script>
+            <script src="https://code.highcharts.com/modules/exporting.js"></script>
+            <script src="https://code.highcharts.com/modules/export-data.js"></script> 
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <h3 >Opening Price is</h3>
+        <div class="d-inline p-2 bg-primary text-white" id="price"></div>
+        <h3>Current Price is</h3>
+        <div class="d-inline p-2 bg-dark text-white" id="current"></div>
+        
+        <h3>Your Curent Balance is</h3>
+        <div id ="current_bal"></div>
+        <br>
+        <br>
+        <form class="form-inline">
+            <label class="mr-sm-2" for="inlineFormCustomSelect">select number of stocks to buy</label>
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+              <option selected>Choose...</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+              <option value="4">Four</option>
+              <option value="5">Five</option>
+              <option value="6">Six</option>
+              <option value="7">Seven</option>
+              <option value="8">Eight</option>
+              <option value="9">Nine</option>
+              
+            </select>
+          
+            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+              <input type="checkbox" class="custom-control-input">
+              <span class="custom-control-indicator"></span>
+              
+            </label>
+          
+            <button id ="button" type="submit" class="btn btn-primary"></a>Submit</button>
+          </form>
+        
+    </body>
+    <script>
+        var chart = Highcharts.chart('container', {
+            chart: {
+                zoomType: 'x'
+            },
+            title: {
+                text: 'Real Time Stock Data'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: 'Rate'
+                }
+            },
+            legend: {
+                enabled: true
+            },
+            series: [{
+                name: 'Price in USD',
+                data: []
+            }
+            ]
+        });
+        var current_balance= 1000000
+        setInterval(() =>{
+            let xhr = new XMLHttpRequest;
+            var s1="https://api.worldtradingdata.com/api/v1/stock?symbol="
+            var quote="{{quote_name}}"
+            var token="&api_token=demo"
+
+            var query=s1+quote+token
+            xhr.addEventListener('load', function(){
+                var response = JSON.parse(this.responseText)
+                console.log(JSON.parse(this.responseText))
+                var price = [(new Date).getTime(), parseInt(response.data[0].price)];
+                console.log(price)
+                // var dataEURO = [(new Date).getTime(), response.bpi.EUR.rate_float];
+                // var dataGBP = [(new Date).getTime(), response.bpi.GBP.rate_float];
+                chart.series[0].addPoint(price)
+                // chart.series[1].addPoint(dataEURO)
+                // chart.series[2].addPoint(dataGBP)
+                document.getElementById('price').innerText=response.data[0].price_open
+                document.getElementById('current').innerText=response.data[0].price
+                document.getElementById('current_bal').innerText=current_balance
+                
+            })
+            xhr.open('GET', query)
+            xhr.send();
+        }, 30000)
+        
+        //console.log(current_balance)
+    </script>
+</html>

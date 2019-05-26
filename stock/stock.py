@@ -16,8 +16,8 @@ intra_day ='https://intraday.worldtradingdata.com/api/v1/intraday?symbol={}&rang
 class Stock(db.Model):
     id =db.Column(db.Integer ,primary_key=True)
     balance =db.Column(db.String(50) ,nullable=False)
-    quote =db.Column(db.String(50) ,nullable=False)
-    shares =db.Column(db.String(50) ,nullable=False)
+    quote =db.Column(db.String(50) )
+    shares =db.Column(db.String(50) )
 
 @app.route('/',methods=['GET' ,'POST']) 
 def main():
@@ -25,25 +25,29 @@ def main():
 
         quote = request.form.get('quote')
         f=0
-
         if quote:
             r =requests.get(stock_url.format(quote)).json()
             if 'Message' in r.keys():
-                f=1
+                 f=1
             else:
-                stock_obj =Stock(data =str(r['data'][0]['price']))
+                stock_obj =Stock(balance ='10000' ,quote=quote ,shares='0')
                 db.session.add(stock_obj)
                 db.session.commit()
+        quote ='AAPL,MSFT,HSBA.L'
+        return render_template('index2.html',quote_name=quote)
 
-    stock = Stock.query.all()
-    stock_data=[]
-    for i in stock:
-        stock_data.append(i.data)
+    else:
+        stock = Stock.query.all()
+        stock_data=[]
+        for i in stock:
+            stock_data.append(i.quote)
     
-    return render_template('index.html',stock_data=stock_data)
-    
+        return render_template('index.html',stock_data=stock_data)
+
+
 if __name__=='main':
     app.run()
+
 
 
 
