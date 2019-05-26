@@ -1,0 +1,35 @@
+<!Doctype html>
+<html>
+<head>
+	<title>Login Page</title>
+	<link rel="stylesheet" type="text/css" href='{{url_for ('static',filename='first_pro.css')}}'> 
+</head>
+
+<body>
+	<div class="loginbox">
+
+		<h1>  Details  </h1>
+		<form method="POST">
+			<p>Enter stock quote </p>
+			<input type="text" name="quote" placeholder="stock quote"><br>
+			<button >
+                Submit
+            </button>
+		</form>
+
+    </div>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-offset-4 is-4">
+                    {% for stock in stock_data %}
+                        <ul>
+                            <li>{{stock}}</li>
+                        </ul>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html> 

@@ -37,7 +37,7 @@ def main():
 
     stock = Stock.query.all()
     stock_data=[]
-    for i in person:
+    for i in stock:
         stock_data.append(i.data)
     
     return render_template('index.html',stock_data=stock_data)
