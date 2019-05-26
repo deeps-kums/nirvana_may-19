@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+            <link rel="stylesheet" type="text/css" href="index2.css">
             <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
             <script src="https://code.highcharts.com/highcharts.js"></script>
             <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -12,16 +13,48 @@
     </head>
     <body>
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-        <h3 >Opening Price is</h3>
-        <div class="d-inline p-2 bg-primary text-white" id="price"></div>
+        <!-- <h3 >Opening Price is</h3>
+        <div class="d-inline p-2 bg-primary text-white" ></div>
         <h3>Current Price is</h3>
-        <div class="d-inline p-2 bg-dark text-white" id="current"></div>
+        <div class="d-inline p-2 bg-dark text-white" id="current"></div> -->
         
-        <h3>Your Curent Balance is</h3>
-        <div id ="current_bal"></div>
+        <!-- <h3>Your Curent Balance is</h3>
+        <div id ="current_bal"></div> -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">OPENING PRICE</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="price"></div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+         
+          <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">CURRENT PRICE</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="current"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
         <br>
         <br>
-        <form class="form-inline">
+        <!-- <form class="form-inline">
             <label class="mr-sm-2" for="inlineFormCustomSelect">select number of stocks to buy</label>
             <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
               <option selected>Choose...</option>
@@ -41,11 +74,29 @@
               <input type="checkbox" class="custom-control-input">
               <span class="custom-control-indicator"></span>
               
-            </label>
+            </label> -->
           
-            <button id ="button" type="submit" class="btn btn-primary"></a>Submit</button>
-          </form>
-        
+            <!-- <button id ="button" type="submit" class="btn btn-primary"></a>Submit</button>
+          </form> -->
+          <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>Row</th>
+                    <th>Name</th>
+                    <th>Current Price</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stock_data%}
+                <tr>
+                    <td>{{stock.id}}</td>
+                    <td>{{stock.quote}}</td>
+                    <td>{{stock.openPrice}}</td>
+                </tr>
+                {% endfor %}  
+            </tbody>
+        </table>
     </body>
     <script>
         var chart = Highcharts.chart('container', {
@@ -80,29 +131,44 @@
         setInterval(() =>{
             let xhr = new XMLHttpRequest;
             var s1="https://api.worldtradingdata.com/api/v1/stock?symbol="
-            var quote="{{quote_name}}"
-            var token="&api_token=demo"
-
+            var quote="{{stock_data[0]['quote']}}"
+            var token="&api_token=FZKP0jcyRUsVimi1RSuTQJT4VFy1RmhxyIb5OrCZiWJE8oZA0SSkkWtWgg1w"
+           
             var query=s1+quote+token
             xhr.addEventListener('load', function(){
                 var response = JSON.parse(this.responseText)
                 console.log(JSON.parse(this.responseText))
                 var price = [(new Date).getTime(), parseInt(response.data[0].price)];
                 console.log(price)
-                // var dataEURO = [(new Date).getTime(), response.bpi.EUR.rate_float];
-                // var dataGBP = [(new Date).getTime(), response.bpi.GBP.rate_float];
+               
                 chart.series[0].addPoint(price)
-                // chart.series[1].addPoint(dataEURO)
-                // chart.series[2].addPoint(dataGBP)
+               
                 document.getElementById('price').innerText=response.data[0].price_open
                 document.getElementById('current').innerText=response.data[0].price
-                document.getElementById('current_bal').innerText=current_balance
                 
             })
             xhr.open('GET', query)
             xhr.send();
-        }, 30000)
-        
-        //console.log(current_balance)
+        }, 10000)
+
+    
+        // let xhr= new XMLHttpRequest
+        // xhr.addEventListener('load',function(){
+        //     var intra=JSON.parse(this.responseText);
+        //     console.log(intra.intraday)
+            
+        //     for(var i of Object.keys(intra.intraday)){
+        //     var l=intra.intraday[i]
+        //     var l1=intra.intraday[0]
+        //     var price= [(new Date).getTime(),l.open];
+        //     console.log(l.open)
+        //     chart.series[0].addPoint(price)
+        // }
+        // }
+
+        // )
+        // xhr.open('GET',"https://intraday.worldtradingdata.com/api/v1/intraday?symbol=AAPL&range=1&interval=1&api_token=demo")
+        // xhr.send()
+    
     </script>
 </html>
