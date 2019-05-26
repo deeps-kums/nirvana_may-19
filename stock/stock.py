@@ -30,10 +30,9 @@ def main():
             if 'Message' in r.keys():
                  f=1
             else:
-                stock_obj =Stock(openPrice=r['data'][0]['price_open'] ,quote=quote)
+                stock_obj =Stock(quote=quote, openPrice=str(r['data'][0]['price_open']))
                 db.session.add(stock_obj)
                 db.session.commit()
-        # quote ='AAPL,MSFT,HSBA.L'
 
         stock = Stock.query.all()
 
@@ -50,9 +49,6 @@ def main():
         return render_template('index2.html',stock_data=stock_data)
 
     else:
-        
-    
-        # return render_template('index.html',stock_data=stock_data)
         return render_template('index.html')
 
 if __name__=='main':
