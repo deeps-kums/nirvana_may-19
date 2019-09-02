@@ -1,7 +1,7 @@
 # nirvana_may-19
 Virtual Stock Market
 team name- nirvana
-idead- real time virtual stock marketing wiyh curretnt values
+idea- real time virtual stock marketing with current values
 team members:
  Harshit Gautam
  Saurabh sinha
